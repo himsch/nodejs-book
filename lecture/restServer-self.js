@@ -54,7 +54,6 @@ const server = http.createServer(async (req, res) => {
         return req.on('end', () => {
           users[key] = JSON.parse(body).name
           res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' })
-          console.log(req._events.end)
           return res.end('modify ok')
         })
       }
