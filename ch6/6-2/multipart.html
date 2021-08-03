@@ -1,6 +1,13 @@
 <form id="form" action="/upload" method="post" enctype="multipart/form-data">
-  <input type="file" name="image1" />
-  <input type="file" name="image2" />
-  <input type="text" name="title" />
+  <input type="file" name="image" />
   <button type="submit">업로드</button>
 </form>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  document.getElementById('form').addEventListener('submin', e => {
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append('image', e.target.image.value)
+    axios.post('/upload', formData)
+  })
+</script>
