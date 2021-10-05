@@ -1,36 +1,44 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-app.use(morgan('dev'));
-app.use(cookieParser());
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    morgan('combined')(req, res, next);
+  } else {
+    morgan('dev')(req, res, next);
+  }
+});
+
+app.use(cookieParser('songhonggyu'));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'songhonggyu',
+    cookie: {
+      httpOnly: true,
+    },
+    name: 'connect.sid',
+  })
+);
+// app.use('요청 경로', express.static('실제 경로'));
+// app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use('요청 경로', express.static('실제 경로'));
-app.use('/', express.static(path.join(__dirname, 'public')));
-
 app.use((req, res, next) => {
   console.log('모든 요청에 실행하고싶다.');
   next();
 });
 
 app.get('/', (req, res, next) => {
-  req.cookies; // {mycookie: 'test'}
-  req.signedCookies;
-  res.cookie('name', encodeURIComponent(name), {
-    expires: new Date(),
-    httpOnly: true,
-    path: '/',
-  });
-  res.clearCookie('name', encodeURIComponent(name), {
-    httpOnly: true,
-    path: '/',
-  });
+  req.session.id = 'hello';
   res.sendFile(path.join(__dirname, './index.html'));
 });
 
