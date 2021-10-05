@@ -11,6 +11,8 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use('요청 경로', express.static('실제 경로'));
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
   console.log('모든 요청에 실행하고싶다.');
