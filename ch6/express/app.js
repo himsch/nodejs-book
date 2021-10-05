@@ -1,9 +1,11 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 // const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
@@ -15,13 +17,12 @@ app.use((req, res, next) => {
     morgan('dev')(req, res, next);
   }
 });
-
-app.use(cookieParser('songhonggyu'));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: 'songhonggyu',
+    secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
     },
