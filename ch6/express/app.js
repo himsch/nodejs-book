@@ -1,41 +1,35 @@
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-app.use(
-  (req, res, next) => {
-    console.log('모든 요청에 실행하고싶다.');
-    next();
-  },
-  (req, res, next) => {
-    try {
-      console.log(asdfadsf);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get(
-  '/',
-  (req, res, next) => {
-    res.sendFile(path.join(__dirname, './index.html'));
-    if (true) {
-      next('route');
-    } else {
-      next();
-    }
-  },
-  (req, res) => {
-    console.log('실행 되나요?');
-  }
-);
+app.use((req, res, next) => {
+  console.log('모든 요청에 실행하고싶다.');
+  next();
+});
 
-app.get('/', (req, res) => {
-  console.log('실행 되지롱.');
+app.get('/', (req, res, next) => {
+  req.cookies; // {mycookie: 'test'}
+  req.signedCookies;
+  res.cookie('name', encodeURIComponent(name), {
+    expires: new Date(),
+    httpOnly: true,
+    path: '/',
+  });
+  res.clearCookie('name', encodeURIComponent(name), {
+    httpOnly: true,
+    path: '/',
+  });
+  res.sendFile(path.join(__dirname, './index.html'));
 });
 
 app.post('/', (req, res) => {
@@ -55,9 +49,9 @@ app.get('/category/:name', (req, res) => {
   res.send('hello wildcard');
 });
 
-// app.get('*', (req, res) => {
-//   res.send('hello everybody');
-// });
+app.use((req, res) => {
+  res.status(404).send('404');
+});
 
 app.use((err, req, res, next) => {
   console.error(err);
