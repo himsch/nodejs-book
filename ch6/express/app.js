@@ -1,20 +1,20 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
-const express = require('express');
+const express = require("express");
 // const path = require('path');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const app = express();
 
-app.set('port', process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3000);
 
 app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production') {
-    morgan('combined')(req, res, next);
+  if (process.env.NODE_ENV === "production") {
+    morgan("combined")(req, res, next);
   } else {
-    morgan('dev')(req, res, next);
+    morgan("dev")(req, res, next);
   }
 });
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -26,7 +26,7 @@ app.use(
     cookie: {
       httpOnly: true,
     },
-    name: 'connect.sid',
+    name: "connect.sid",
   })
 );
 // app.use('요청 경로', express.static('실제 경로'));
@@ -34,41 +34,41 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  console.log('모든 요청에 실행하고싶다.');
+  console.log("모든 요청에 실행하고싶다.");
   next();
 });
 
-app.get('/', (req, res, next) => {
-  req.session.id = 'hello';
-  res.sendFile(path.join(__dirname, './index.html'));
+app.get("/", (req, res, next) => {
+  req.session.id = "hello";
+  res.sendFile(path.join(__dirname, "./index.html"));
 });
 
-app.post('/', (req, res) => {
-  res.send('hello express');
+app.post("/", (req, res) => {
+  res.send("hello express");
 });
 
-app.get('/category/javascript', (req, res) => {
-  res.send('hello javascript');
-  console.log('hello');
+app.get("/category/javascript", (req, res) => {
+  res.send("hello javascript");
+  console.log("hello");
 });
 
-app.get('/about', (req, res) => {
-  res.send('hello express');
+app.get("/about", (req, res) => {
+  res.send("hello express");
 });
 
-app.get('/category/:name', (req, res) => {
-  res.send('hello wildcard');
+app.get("/category/:name", (req, res) => {
+  res.send("hello wildcard");
 });
 
 app.use((req, res) => {
-  res.status(404).send('404');
+  res.status(404).send("404");
 });
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).send('에러났씁니다람지렁이.');
+  res.status(500).send("에러났씁니다람지렁이.");
 });
 
-app.listen(app.get('port'), () => {
-  console.log('익스프레스 서버 실행');
+app.listen(app.get("port"), () => {
+  console.log("익스프레스 서버 실행");
 });
